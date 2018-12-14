@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\AppBundle;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Driver\OCI8\Driver;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -73,6 +75,42 @@ class User implements UserInterface
      * @ORM\Column(name="avatar", type="string", length=255, nullable=true)
      */
     private $avatar;
+
+
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Offer", mappedBy="driver")
+     */
+    private $offers;
+
+
+    public function __construct()
+    {
+        $this->offers = new ArrayCollection();
+    }
+
+    /**
+     * @param \AppBundle\Entity\Offer $offer
+     *
+     * @return User
+     */
+    public function addOffer($offer)
+    {
+        $this->offers[] = $offer;
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOffers()
+    {
+        return $this->offers;
+    }
+
+
 
 
 
