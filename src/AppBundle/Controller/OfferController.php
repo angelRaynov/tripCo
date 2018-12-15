@@ -28,8 +28,8 @@ class OfferController extends Controller
 
         if ( $form->isSubmitted()){
             $offer->setDriver($this->getUser());
-            $offer->setStartDestination($form->getExtraData()['from']);
-            $offer->setEndDestination($form->getExtraData()['to']);
+//            $offer->setStartDestination($form->getExtraData()['from']);
+//            $offer->setEndDestination($form->getExtraData()['to']);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($offer);
