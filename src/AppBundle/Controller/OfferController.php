@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Offer;
+use AppBundle\Entity\User;
 use AppBundle\Form\OfferType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -16,7 +17,7 @@ class OfferController extends Controller
      * @param Request $request
      *
      * @Route("/offer/create", name="offer_create")
-//   *
+     *
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -27,7 +28,7 @@ class OfferController extends Controller
 
         $form->handleRequest($request);
 
-        if ( $form->isSubmitted()){
+        if ($form->isSubmitted()) {
             $offer->setDriver($this->getUser());
 
             $em = $this->getDoctrine()->getManager();
@@ -58,18 +59,24 @@ class OfferController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editOffer ($id, Request $request)
+    public function editOffer($id, Request $request)
     {
         $offer = $this->getDoctrine()->getRepository(Offer::class)->find($id);
 
-        if ($offer === null){
+        if ($offer === null) {
             $this->redirectToRoute('default_index');
+        }
+
+        /** @var User $currentUser*/
+        $currentUser = $this->getUser();
+        if(!$currentUser->isDriver($offer) && !$currentUser->isAdmin()){
+          return $this->redirectToRoute('default_index');
         }
 
         $form = $this->createForm(OfferType::class, $offer);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($offer);
             $em->flush();
@@ -77,7 +84,7 @@ class OfferController extends Controller
                 'id' => $offer->getId()
             ));
         }
-     
+
 
         return $this->render('offer/edit.html.twig',
             array('offer' => $offer,
@@ -90,14 +97,51 @@ class OfferController extends Controller
      *
      *
      */
-    public function myOffers(){
+    public function myOffers()
+    {
         $offers = $this->getDoctrine()->getRepository(Offer::class)
             ->findBy(['driverId' => $this->getUser()]);
-
 
 
         return $this->render('user/myOffers.html.twig',
             ['offers' => $offers]
         );
     }
+
+    /**
+     * @Route("/offer/delete/{id}", name="offer_delete")
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteOffer(Request $request, $id)
+    {
+        $offer = $this->getDoctrine()->getRepository(Offer::class)->find($id);
+
+        if ($offer === null) {
+            $this->redirectToRoute('default_index');
+        }
+
+        /** @var User $currentUser*/
+        $currentUser = $this->getUser();
+        if(!$currentUser->isDriver($offer) && !$currentUser->isAdmin()){
+            return $this->redirectToRoute('default_index');
+        }
+
+        $form = $this->createForm(OfferType::class, $offer);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($offer);
+            $em->flush();
+            return $this->redirectToRoute('user_offers');
+        }
+
+        return $this->render('offer/delete.html.twig',
+            array('offer' => $offer, 'form' => $form->createView())
+        );
+    }
 }
+
+

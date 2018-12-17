@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <div class="container body-content span=8 offset=2">
+        <div class="well">
+            <form class="form-horizontal" action="{{ path('offer_delete', {'id':offer.id}) }}" method="POST">
+                <fieldset>
+                    <legend>Delete Offer</legend>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">From</label>
+                        <div class="col-sm-4 ">
+                            <input type="text" class="form-control"  placeholder="From"
+                                   name="offer[start_destination]" value="{{ offer.startDestination }}" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">To</label>
+                        <div class="col-sm-4 ">
+                            <input type="text" class="form-control"  placeholder="To"
+                                   name="offer[end_destination]" value="{{ offer.endDestination }}" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Date</label>
+                        <div class="col-sm-4 ">
+                            <input type="text" class="form-control"  placeholder="Date"
+                                   name="offer[date]" value="{{ offer.date }}" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Hour</label>
+                        <div class="col-sm-4 ">
+                            <input type="text" class="form-control"  placeholder="Hour"
+                                   name="offer[hour]" value="{{ offer.hour }}" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Price</label>
+                        <div class="col-sm-4 ">
+                            <input type="text" class="form-control"  placeholder="Price"
+                                   name="offer[price]" value="{{ offer.price }}" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Seats</label>
+                        <div class="col-sm-4 ">
+                            <input type="text" class="form-control"  placeholder="Seats"
+                                   name="offer[seats]" value="{{ offer.seats }}" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="offer_message">Message</label>
+                        <div class="col-sm-6">
+                        <textarea class="form-control" rows="6" id="offer_message"
+                                  name="offer[message]" disabled>{{ offer.message }}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Luggage</label>
+                        <div class="col-sm-4 ">
+                            <input type="text" class="form-control"  placeholder="Luggage"
+                                   name="offer[luggage]" value="{{ offer.luggage }}" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Car</label>
+                        <div class="col-sm-4 ">
+                            <input type="text" class="form-control"  placeholder="Car"
+                                   name="offer[car]" value="{{ offer.car }}" disabled>
+                        </div>
+                    </div>
+                    {{ form_row(form._token) }}
+
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-4">
+                            <a class="btn btn-default" href="{{ path('default_index') }}">Cancel</a>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

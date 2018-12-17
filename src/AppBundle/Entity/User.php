@@ -33,7 +33,6 @@ class User implements UserInterface
     private $email;
 
 
-
     /**
      * @var string
      *
@@ -77,7 +76,6 @@ class User implements UserInterface
     private $avatar;
 
 
-
     /**
      * @var ArrayCollection
      *
@@ -85,10 +83,21 @@ class User implements UserInterface
      */
     private $offers;
 
+    /**
+     * @var ArrayCollection
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Role")
+     * @ORM\JoinTable(name="users_roles",
+     *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+     *     )
+     */
+    private $roles;
+
 
     public function __construct()
     {
         $this->offers = new ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 
     /**
@@ -109,9 +118,6 @@ class User implements UserInterface
     {
         return $this->offers;
     }
-
-
-
 
 
     /**
@@ -300,7 +306,43 @@ class User implements UserInterface
      */
     public function getRoles()
     {
-        return [];
+        $stringRoles = [];
+
+        foreach ($this->roles as $role) {
+            /** $role Role */
+            $stringRoles[] = $role->getRole();
+        }
+
+        return $stringRoles;
+    }
+
+    /**
+     * @param Role $role
+     *
+     * @return User
+     */
+    public function addRole(Role $role)
+    {
+        $this->roles[] = $role;
+
+        return $this;
+    }
+
+    /**
+     * @param Offer $offer
+     * @return bool
+     */
+    public function isDriver(Offer $offer)
+    {
+        return $offer->getDriverId() === $this->getId();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return in_array("ROLE_ADMIN", $this->getRoles());
     }
 
     /**

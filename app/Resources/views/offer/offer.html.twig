@@ -19,6 +19,10 @@
 
                     <footer>
                         <div class="pull-right">
+                            {% if app.getUser() and (app.getUser().isDriver(offer) or app.getUser.isAdmin()) %}
+                            <a class="btn btn-success btn-xs" href="{{ path('offer_edit', {'id':offer.id}) }}">Edit</a>
+                            <a class="btn btn-danger btn-xs" href="{{ path('offer_delete', {'id':offer.id}) }}">Delete</a>
+                            {% endif %}
                             <a class="btn btn-default btn-xs" href="{{ path('default_index') }}">back &raquo;</a>
                         </div>
                     </footer>

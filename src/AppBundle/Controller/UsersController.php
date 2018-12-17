@@ -2,7 +2,8 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Article;
+
+use AppBundle\Entity\Offer;
 use AppBundle\Entity\Role;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,12 +34,12 @@ class UsersController extends Controller
 
             $user->setPassword($password);
 
-//            $roleRepository = $this->getDoctrine()->getRepository(Role::class);
+            $roleRepository = $this->getDoctrine()->getRepository(Role::class);
 
-//            $userRole = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
+            $userRole = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
 
 
-//            $user->addRole($userRole);
+            $user->addRole($userRole);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
@@ -61,22 +62,6 @@ class UsersController extends Controller
         return $this->render("user/profile.html.twig", ['user' => $user]);
     }
 
-//    public function showMyArticles()
-//    {
-//        $repository = $this
-//            ->getDoctrine()
-//            ->getRepository(Article::class);
-//        $authorId = $this
-//            ->getUser()
-//            ->getId();
-//        $articles = $repository->findBy(
-//            ['authorId' => $authorId],
-//            ['dateAdded' => 'DESC']
-//        );
-//        return $this->render('user/articles.html.twig',
-//            [
-//                'articles' => $articles
-//            ]);
-//    }
+
 
 }
