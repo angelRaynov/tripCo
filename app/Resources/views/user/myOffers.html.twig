@@ -11,17 +11,17 @@
                         </header>
 
                         <p>
-                            {{ offer.price}}
+                            {{ offer.message }}
                         </p>
-
-                        <small class="author">
-                            {{ offer.driver.name }}
-                        </small>
 
                         <footer>
                             <div class="pull-right">
                                 <a class="btn btn-default btn-xs"
-                                   href="{{ path('offer_view', {'id':offer.id}) }}">View/Book &raquo;</a>
+                                   href="{{ path('offer_edit', {'id':offer.id}) }}">Edit</a>
+                                {#<a class="btn btn-default btn-xs"#}
+                                   {#href="{{ path('offer_delete', {'id':offer.id}) }}">Delete</a>#}
+                                <a class="btn btn-default btn-xs"
+                                   href="{{ path('default_index') }}">Back &raquo;</a>
                             </div>
                         </footer>
                     </article>
@@ -29,5 +29,5 @@
             {% endfor %}
         </div>
     </div>
-
 {% endblock %}
+
