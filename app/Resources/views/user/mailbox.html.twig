@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    {% for message in messages %}
+        {% if not message.readed %}
+        <p><a href="{{ path('current_message', {'id': message.id}) }}"> {{ message.sender.email }}</a>
+            <span style="float:right; color: red">Unread</span>
+        </p>
+        <hr/>
+        {% else %}
+            <p><a href="{{ path('current_message', {'id': message.id}) }}"> {{ message.sender.email }}</a>
+                <span style="float:right; color: green">Read</span>
+            </p>
+            <hr/>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+

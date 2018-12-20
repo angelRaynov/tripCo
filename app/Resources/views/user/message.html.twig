@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    {% for msg in app.session.flashbag.get('message') %}
+        <div id="msg" align="center" class="aslert alert-success">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close"></a>
+            {{ msg }}
+        </div>
+    {% endfor %}
+
+    <p>From: {{ message.sender.name }}</p>
+    <p>About: {{ message.about }}</p>
+    <p>Content: {{ message.content }}</p>
+    <small>Date: {{ message.dateAdded|date("F jS \\a\\t g:ia", 'Europe/Sofia') }}</small>
+
+
+
+    <br/>
+
+    <button class="btn btn-success btn-sm" id="btnMessage">Answer</button>
+    <div id="form"></div>
+
+    <script>
+
+        let form = $('' +
+            '<form method="post">' +
+            'About:<input type="text" name="message[about]"><br/>' +
+            'Content:<textarea rows="10" name="message[content]"></textarea><br/>' +
+            '<input type="submit" value="Send"><br/>' +
+            '</form>');
+
+
+        $('#btnMessage').click(function (e) {
+            // alert('hi');
+            e.preventDefault();
+            $('#form').append(form);
+            $('#form').toggle();
+        })
+    </script>
+
+{% endblock %}
+

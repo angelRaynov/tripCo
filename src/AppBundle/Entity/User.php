@@ -93,11 +93,26 @@ class User implements UserInterface
      */
     private $roles;
 
+    /**
+     * @var ArrayCollection|Message[]
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Message", mappedBy="sender")
+     */
+    private $senders;
+
+
+    /**
+     * @var ArrayCollection|Message[]
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Message", mappedBy="recipient")
+     */
+    private $recipients;
+
 
     public function __construct()
     {
         $this->offers = new ArrayCollection();
         $this->roles = new ArrayCollection();
+        $this->senders = new ArrayCollection();
+        $this->recipients = new ArrayCollection();
     }
 
     /**
@@ -377,6 +392,24 @@ class User implements UserInterface
     {
         // TODO: Implement eraseCredentials() method.
     }
+
+    /**
+     * @return Message[]|ArrayCollection
+     */
+    public function getSenderMessages()
+    {
+        return $this->senders;
+    }
+
+    /**
+     * @return Message[]|ArrayCollection
+     */
+    public function getRecipientMessages()
+    {
+        return $this->recipients;
+    }
+
+
 
 }
 

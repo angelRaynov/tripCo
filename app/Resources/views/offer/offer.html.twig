@@ -14,7 +14,7 @@
                     </p>
 
                     <small class="author">
-                        {{ offer.driver.name }}
+                        <a href="{{ path('user_message', {'id': offer.driverId}) }}">{{ offer.driver.name }}</a>
                     </small>
 
                     <footer>

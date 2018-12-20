@@ -17,7 +17,7 @@ class OfferController extends Controller
      * @param Request $request
      *
      * @Route("/offer/create", name="offer_create")
-     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -49,11 +49,14 @@ class OfferController extends Controller
     public function viewOffer($id)
     {
         $offer = $this->getDoctrine()->getRepository(Offer::class)->find($id);
-
-        return $this->render('offer/offer.html.twig', ['offer' => $offer]);
+        $userId = $this->getUser()->getId();
+        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+        $countMsg = count($user->getRecipientMessages());
+        return $this->render('offer/offer.html.twig', ['offer' => $offer, 'countMsg' => $countMsg]);
     }
 
     /**
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @Route("/offer/edit/{id}", name="offer_edit")
      * @param $id
      * @param Request $request
@@ -92,7 +95,7 @@ class OfferController extends Controller
     }
 
     /**
-     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @Route("/myOffers", name="user_offers")
      *
      *
@@ -110,6 +113,7 @@ class OfferController extends Controller
 
     /**
      * @Route("/offer/delete/{id}", name="offer_delete")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
