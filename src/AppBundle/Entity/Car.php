@@ -50,11 +50,6 @@ class Car
      */
     private $picture;
 
-//    /**
-//     * @var int
-//     * @ORM\Column(name="owner_id", type="integer")
-//     */
-//    private $ownerId;
 
     /**
      * @var User
@@ -171,21 +166,6 @@ class Car
         return $this->picture;
     }
 
-//    /**
-//     * @return int
-//     */
-//    public function getOwnerId()
-//    {
-//        return $this->ownerId;
-//    }
-//
-//    /**
-//     * @param $ownerId
-//     */
-//    public function setOwnerId($ownerId)
-//    {
-//        $this->ownerId = $ownerId;
-//    }
 
     /**
      * @return User

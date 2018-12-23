@@ -8,6 +8,8 @@ use AppBundle\Entity\User;
 use AppBundle\Form\CarType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -24,15 +26,24 @@ class CarController extends Controller
     public function addCar(Request $request)
     {
         $car = new Car();
-        $form = $this->createForm(CarType::class,$car);
+        $form = $this->createForm(CarType::class, $car);
 
         $form->handleRequest($request);
 
         $countMsg = $this->messageCount();
 
         if ($form->isSubmitted()) {
-            $car->setOwner($this->getUser());
+            /** @var UploadedFile $file */
+            $file = $form->getData()->getPicture();
+            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
 
+            try {
+                $file->move($this->getParameter('car_directory'), $fileName);
+            } catch (FileException $ex) {
+
+            }
+            $car->setPicture($fileName);
+            $car->setOwner($this->getUser());
             $em = $this->getDoctrine()->getManager();
             $em->persist($car);
             $em->flush();
@@ -51,9 +62,6 @@ class CarController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-
-    // ne rabotiii!!!!!!!!!!!!!!!!!!!!!!!!!!1
-
     public function editCar($id, Request $request)
     {
         $car = $this->getDoctrine()->getRepository(Car::class)->find($id);
@@ -63,19 +71,27 @@ class CarController extends Controller
             $this->redirectToRoute('default_index');
         }
 //
-        /** @var Car $user*/
+        /** @var User $user */
         $user = $this->getUser();
-        if(!$user->isOwner($car) && !$user->isAdmin()){
+        if (!$user->isOwner($car) && !$user->isAdmin()) {
             return $this->redirectToRoute('default_index');
         }
 
-        $form = $this->createForm(CarType::class,$car);
+        $form = $this->createForm(CarType::class, $car);
         $form->handleRequest($request);
 //
         if ($form->isSubmitted()) {
 
+            /** @var UploadedFile $file */
+            $file = $form->getData()->getPicture();
+            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
 
+            try {
+                $file->move($this->getParameter('car_directory'), $fileName);
+            } catch (FileException $ex) {
 
+            }
+            $car->setPicture($fileName);
             $em = $this->getDoctrine()->getManager();
             $em->persist($car);
             $em->flush();
@@ -106,10 +122,10 @@ class CarController extends Controller
             $this->redirectToRoute('default_index');
         }
 
-        /** @var User $currentUser*/
+        /** @var User $currentUser */
         $currentUser = $this->getUser();
         $countMsg = $this->messageCount();
-        if(!$currentUser->isOwner($car) && !$currentUser->isAdmin()){
+        if (!$currentUser->isOwner($car) && !$currentUser->isAdmin()) {
             return $this->redirectToRoute('default_index');
         }
 
@@ -122,10 +138,10 @@ class CarController extends Controller
             $em->flush();
             return $this->redirectToRoute('user_cars');
         }
-//       dump($form);exit();
+
 
         return $this->render('car/delete.html.twig',
-            array('car' => $car, 'form' => $form->createView(),'countMsg' => $countMsg)
+            array('car' => $car, 'form' => $form->createView(), 'countMsg' => $countMsg)
         );
     }
 
@@ -167,7 +183,7 @@ class CarController extends Controller
             ->getDoctrine()
             ->getRepository(Message::class)
             ->findBy(['recipient' => $user, 'isReaded' => false]);
-        return  count($unreadMessages);
+        return count($unreadMessages);
     }
 }
 

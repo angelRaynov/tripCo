@@ -8,7 +8,7 @@
                     <header>
                         <h2>{{ car.manufacturer }}  {{ car.model }}</h2>
                     </header>
-
+                    <img src="{{ asset('uploads/images/' ~ car.picture) }}" width="350" height="200">
                     <p>
                         {{ car.year }}
                     </p>
@@ -17,7 +17,8 @@
                         <div class="pull-right">
                             {% if app.getUser() and (app.getUser.isAdmin()) %}
                                 <a class="btn btn-success btn-xs" href="{{ path('car_edit', {'id':car.id}) }}">Edit</a>
-                                <a class="btn btn-danger btn-xs" href="{{ path('car_delete', {'id':car.id}) }}">Delete</a>
+                                <a class="btn btn-danger btn-xs"
+                                   href="{{ path('car_delete', {'id':car.id}) }}">Delete</a>
                             {% endif %}
                             <a class="btn btn-default btn-xs" href="{{ path('user_cars') }}">back &raquo;</a>
                         </div>

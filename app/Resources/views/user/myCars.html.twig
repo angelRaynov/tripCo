@@ -1,15 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-    <h1><a href="{{ path('car_create') }}">Add Car</a> </h1>
+    <h1><a href="{{ path('car_create') }}">Add Car</a></h1>
     {% for car in cars %}
         <header>
-            <h2><a href="{{ path('car_view', {'id': car.id}) }}">{{ car.manufacturer }}  {{ car.model }}</a> </h2>
+            <h2>{{ car.manufacturer }}  {{ car.model }} </h2>
         </header>
 
-        <p>
-            {{ car.year }}
-        </p>
+        <a href="{{ path('car_view', {'id': car.id}) }}">
+            <img src="{{ asset('uploads/images/' ~ car.picture) }}" width="350" height="200"></a>
 
         <footer>
             <div class="pull-right">
