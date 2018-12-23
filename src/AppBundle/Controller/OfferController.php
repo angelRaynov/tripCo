@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Message;
 use AppBundle\Entity\Offer;
 use AppBundle\Entity\User;
 use AppBundle\Form\OfferType;
@@ -28,6 +29,8 @@ class OfferController extends Controller
 
         $form->handleRequest($request);
 
+        $countMsg = $this->messageCount();
+
         if ($form->isSubmitted()) {
             $offer->setDriver($this->getUser());
 
@@ -37,7 +40,7 @@ class OfferController extends Controller
             return $this->redirectToRoute('default_index');
         }
         return $this->render('offer/create.html.twig',
-            array('form' => $form->createView()));
+            array('form' => $form->createView(), 'countMsg' => $countMsg));
     }
 
 
@@ -49,9 +52,7 @@ class OfferController extends Controller
     public function viewOffer($id)
     {
         $offer = $this->getDoctrine()->getRepository(Offer::class)->find($id);
-        $userId = $this->getUser()->getId();
-        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
-        $countMsg = count($user->getRecipientMessages());
+        $countMsg = $this->messageCount();
         return $this->render('offer/offer.html.twig', ['offer' => $offer, 'countMsg' => $countMsg]);
     }
 
@@ -65,6 +66,7 @@ class OfferController extends Controller
     public function editOffer($id, Request $request)
     {
         $offer = $this->getDoctrine()->getRepository(Offer::class)->find($id);
+        $countMsg = $this->messageCount();
 
         if ($offer === null) {
             $this->redirectToRoute('default_index');
@@ -84,14 +86,15 @@ class OfferController extends Controller
             $em->persist($offer);
             $em->flush();
             return $this->redirectToRoute('offer_view', array(
-                'id' => $offer->getId()
+                'id' => $offer->getId(),
             ));
         }
 
 
         return $this->render('offer/edit.html.twig',
             array('offer' => $offer,
-                'form' => $form->createView()));
+                'form' => $form->createView(),
+                'countMsg' => $countMsg));
     }
 
     /**
@@ -105,9 +108,10 @@ class OfferController extends Controller
         $offers = $this->getDoctrine()->getRepository(Offer::class)
             ->findBy(['driverId' => $this->getUser()]);
 
+        $countMsg = $this->messageCount();
 
         return $this->render('user/myOffers.html.twig',
-            ['offers' => $offers]
+            ['offers' => $offers, 'countMsg' => $countMsg]
         );
     }
 
@@ -121,7 +125,7 @@ class OfferController extends Controller
     public function deleteOffer(Request $request, $id)
     {
         $offer = $this->getDoctrine()->getRepository(Offer::class)->find($id);
-
+        $countMsg = $this->messageCount();
         if ($offer === null) {
             $this->redirectToRoute('default_index');
         }
@@ -143,8 +147,20 @@ class OfferController extends Controller
         }
 
         return $this->render('offer/delete.html.twig',
-            array('offer' => $offer, 'form' => $form->createView())
+            array('offer' => $offer, 'form' => $form->createView(), 'countMsg' => $countMsg)
         );
+    }
+
+   public function messageCount()
+    {
+        $userId = $this->getUser()->getId();
+        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+
+        $unreadMessages = $this
+            ->getDoctrine()
+            ->getRepository(Message::class)
+            ->findBy(['recipient' => $user, 'isReaded' => false]);
+       return $countMsg = count($unreadMessages);
     }
 }
 

@@ -3,14 +3,16 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Entity\Message;
 use AppBundle\Entity\Offer;
 use AppBundle\Entity\Role;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
-
 
 
 class UsersController extends Controller
@@ -27,7 +29,7 @@ class UsersController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()){
+        if ($form->isSubmitted()) {
 
             $password = $this->get('security.password_encoder')
                 ->encodePassword($user, $user->getPassword());
@@ -53,15 +55,30 @@ class UsersController extends Controller
 
     /**
      * @Route("/profile", name="user_profile")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function profile()
     {
         $userId = $this->getUser()->getId();
         $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
 
-        return $this->render("user/profile.html.twig", ['user' => $user]);
+        $countMsg = $this->messageCount();
+
+
+        return $this->render("user/profile.html.twig", ['user' => $user, 'countMsg' => $countMsg]);
     }
 
+    public function messageCount()
+    {
+        $userId = $this->getUser()->getId();
+        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+        $unreadMessages = $this
+            ->getDoctrine()
+            ->getRepository(Message::class)
+            ->findBy(['recipient' => $user, 'isReaded' => false]);
+        return count($unreadMessages);
 
-
+    }
 }

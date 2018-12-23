@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <h1><a href="{{ path('car_create') }}">Add Car</a> </h1>
+    {% for car in cars %}
+        <header>
+            <h2><a href="{{ path('car_view', {'id': car.id}) }}">{{ car.manufacturer }}  {{ car.model }}</a> </h2>
+        </header>
+
+        <p>
+            {{ car.year }}
+        </p>
+
+        <footer>
+            <div class="pull-right">
+                {% if app.getUser() and (app.getUser.isAdmin() or app.getUser.isOwner(car)) %}
+                    <a class="btn btn-success btn-xs" href="{{ path('car_edit', {'id':car.id}) }}">Edit</a>
+                    <a class="btn btn-danger btn-xs" href="{{ path('car_delete', {'id':car.id}) }}">Delete</a>
+                {% endif %}
+                <a class="btn btn-default btn-xs" href="{{ path('default_index') }}">back &raquo;</a>
+            </div>
+        </footer>
+    {% endfor %}
+{% endblock %}
+

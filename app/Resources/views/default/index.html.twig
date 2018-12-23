@@ -19,10 +19,12 @@
                         </small>
 
                         <footer>
+                            {% if app.user %}
                             <div class="pull-right">
                                 <a class="btn btn-default btn-xs"
                                    href="{{ path('offer_view', {'id':offer.id}) }}">View/Book &raquo;</a>
                             </div>
+                            {% endif %}
                         </footer>
                     </article>
                 </div>

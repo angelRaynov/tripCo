@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <div class="container body-content">
+        <div class="row">
+            <div class="col-md-12">
+                <article>
+                    <header>
+                        <h2>{{ car.manufacturer }}  {{ car.model }}</h2>
+                    </header>
+
+                    <p>
+                        {{ car.year }}
+                    </p>
+
+                    <footer>
+                        <div class="pull-right">
+                            {% if app.getUser() and (app.getUser.isAdmin()) %}
+                                <a class="btn btn-success btn-xs" href="{{ path('car_edit', {'id':car.id}) }}">Edit</a>
+                                <a class="btn btn-danger btn-xs" href="{{ path('car_delete', {'id':car.id}) }}">Delete</a>
+                            {% endif %}
+                            <a class="btn btn-default btn-xs" href="{{ path('user_cars') }}">back &raquo;</a>
+                        </div>
+                    </footer>
+                </article>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

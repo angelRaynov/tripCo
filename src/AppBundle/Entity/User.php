@@ -106,6 +106,13 @@ class User implements UserInterface
      */
     private $recipients;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Car", mappedBy="owner")
+     */
+    private $cars;
+
 
     public function __construct()
     {
@@ -113,6 +120,7 @@ class User implements UserInterface
         $this->roles = new ArrayCollection();
         $this->senders = new ArrayCollection();
         $this->recipients = new ArrayCollection();
+        $this->cars = new ArrayCollection();
     }
 
     /**
@@ -407,6 +415,38 @@ class User implements UserInterface
     public function getRecipientMessages()
     {
         return $this->recipients;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCars()
+    {
+        return $this->cars;
+    }
+
+    /**
+     * @param $car
+     */
+    public function setCars($car)
+    {
+        $this->cars[] = $car;
+    }
+
+
+    /**
+     * @param Car $car
+     * @return bool
+     */
+    public function isOwner(Car $car)
+    {
+       foreach ($this->getCars() as $item){
+           if ($item === $car){
+               return true;
+           }
+       }
+
+       return false;
     }
 
 

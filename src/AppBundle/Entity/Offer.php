@@ -99,6 +99,7 @@ class Offer
      * @ORM\JoinColumn(name="driver_id", referencedColumnName="id")
      */
     private $driver;
+
     /**
      * @return \AppBundle\Entity\User
      */

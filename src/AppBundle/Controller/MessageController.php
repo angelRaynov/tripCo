@@ -27,10 +27,9 @@ class MessageController extends Controller
         $message = new Message();
         $form = $this->createForm(MessageType::class, $message);
         $form->handleRequest($request);
-        $userId = $this->getUser()->getId();
-        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
 
-        $countMsg = count($user->getRecipientMessages());
+
+        $countMsg = $this->messageCount();
 
         if ($form->isSubmitted()) {
             $message
@@ -60,9 +59,7 @@ class MessageController extends Controller
 
         $user = $this->getDoctrine()->getRepository(User::class)->find($currentUserId);
 
-        $userId = $this->getUser()->getId();
-        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
-        $countMsg = count($user->getRecipientMessages());
+        $countMsg = $this->messageCount();
 
         $messages = $this
             ->getDoctrine()
@@ -94,9 +91,6 @@ class MessageController extends Controller
         $form = $this->createForm(MessageType::class,$sendMessage);
         $form->handleRequest($request);
 
-        $userId = $this->getUser()->getId();
-        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
-        $countMsg = count($user->getRecipientMessages());
 
         if ($form->isSubmitted()){
             $sendMessage
@@ -109,16 +103,26 @@ class MessageController extends Controller
             $em->flush();
 
             $this->addFlash("message", "Message sent!");
-
+            $countMsg = $this->messageCount();
             return $this->redirectToRoute("current_message", ['id' => $id, 'countMsg' => $countMsg]);
         }
 
-        $userId = $this->getUser()->getId();
-        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
-        $countMsg = count($user->getRecipientMessages());
+        $countMsg = $this->messageCount();
 
         return $this->render("user/message.html.twig",
             ["message" => $message, 'countMsg' => $countMsg]);
     }
 
+
+    public function messageCount()
+    {
+        $userId = $this->getUser()->getId();
+        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+        $unreadMessages = $this
+            ->getDoctrine()
+            ->getRepository(Message::class)
+            ->findBy(['recipient' => $user, 'isReaded' => false]);
+        $countMsg = count($unreadMessages);
+        return $countMsg;
+    }
 }
