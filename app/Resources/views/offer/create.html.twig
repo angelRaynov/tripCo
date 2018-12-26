@@ -65,8 +65,7 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label">Car</label>
                         <div class="col-sm-4 ">
-                            <input type="text" class="form-control"  placeholder="Car"
-                                   name="offer[car]">
+                            {{ form_widget(form.car, {'attr': {'id': 'car_form', 'class': 'form-control'}}) }}
                         </div>
                     </div>
                     {{ form_row(form._token) }}

@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,7 +21,7 @@ class UserType extends AbstractType
             ->add("name" , TextType::class)
             ->add("age", TextType::class)
             ->add("phone", TextType::class)
-            ->add("avatar", TextType::class)
+            ->add("avatar", FileType::class, ['data' => null])
             ->add("bio", TextType::class);
     }
 

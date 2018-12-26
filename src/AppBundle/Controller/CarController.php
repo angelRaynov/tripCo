@@ -47,7 +47,7 @@ class CarController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($car);
             $em->flush();
-            return $this->redirectToRoute('default_index');
+            return $this->redirectToRoute('user_cars');
         }
         return $this->render('car/create.html.twig',
             array('car' => $car, 'countMsg' => $countMsg));

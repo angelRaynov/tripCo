@@ -9,6 +9,8 @@ use AppBundle\Entity\Role;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use AppBundle\Entity\User;
@@ -68,6 +70,48 @@ class UsersController extends Controller
 
 
         return $this->render("user/profile.html.twig", ['user' => $user, 'countMsg' => $countMsg]);
+    }
+
+    /**
+     * @Route("/profile/update", name="user_update")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function updateProfile(Request $request)
+    {
+        $userId = $this->getUser()->getId();
+        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+
+        $countMsg =$this->messageCount();
+
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $user->setAge($form->getData()->getAge());
+            $user->setPhone($form->getData()->getPhone());
+            $user->setBio($form->getData()->getBio());
+
+
+            /** @var UploadedFile $file */
+            $file = $form->getData()->getAvatar();
+            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+
+            try {
+                $file->move($this->getParameter('avatar_directory'), $fileName);
+            } catch (FileException $ex) {
+
+            }
+//            var_dump($fileName);exit();
+            $user->setAvatar($fileName);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+        }
+
+        return $this->render("user/update.html.twig", ['user' => $user, 'countMsg' => $countMsg]);
     }
 
     public function messageCount()

@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <div class="container body-content span=8 offset=2">
+        <div class="well">
+            <form class="form-horizontal" enctype="multipart/form-data" action="{{ path('user_update') }}" method="post">
+                <fieldset>
+                    <legend>Update Profile</legend>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="user_email">Email</label>
+                        <div class="col-sm-4 ">
+                            <input class="form-control" id="user_email" placeholder="Email"
+                                   name="user[email]" value="{{ user.email }}" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="user_name">Name</label>
+                        <div class="col-sm-4 ">
+                            <input type="text" class="form-control" id="user_name" placeholder="Name"
+                                   name="user[name]" value="{{ user.name }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="user_age">Age</label>
+                        <div class="col-sm-4 ">
+                            <input type="text" class="form-control" id="user_age" placeholder="Age"
+                                   name="user[age]" value="{{ user.age }}" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="user_name">Phone</label>
+                        <div class="col-sm-4 ">
+                            <input type="text" class="form-control" id="user_phone" placeholder="Phone"
+                                   name="user[phone]" value="{{ user.phone }}" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="user_bio">Bio</label>
+                        <div class="col-sm-6">
+                        <textarea class="form-control" rows="6" id="user_bio"
+                                  name="user[bio]">{{ user.bio }}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="user_avatar">Avatar</label>
+                        <div class="col-sm-4 ">
+                            <input type="file" class="form-control" id="user_avatar" placeholder="Avatar"
+                                   name="user[avatar]" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-4">
+                            <a class="btn btn-default" href="{{ path('default_index') }}">Cancel</a>
+                            <input type="submit" class="btn btn-primary" value="Update Profile">
+                        </div>
+                    </div>
+
+                </fieldset>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
