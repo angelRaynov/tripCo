@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,9 +37,9 @@ class Offer
     private $endDestination;
 
     /**
-     * @var string
+     * @var datetime
      *
-     * @ORM\Column(name="date", type="string", length=255)
+     * @ORM\Column(name="date", type="datetime", length=255)
      */
     private $date;
 
@@ -78,7 +79,7 @@ class Offer
     private $luggage;
 
     /**
-     * @var string
+     * @var Car
      *
      * @ORM\Column(name="car", type="string", length=255)
      */

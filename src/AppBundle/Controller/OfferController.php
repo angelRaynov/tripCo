@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Car;
 use AppBundle\Entity\Message;
 use AppBundle\Entity\Offer;
 use AppBundle\Entity\User;
@@ -25,6 +26,7 @@ class OfferController extends Controller
     public function createOffer(Request $request)
     {
         $offer = new Offer();
+
         $form = $this->createForm(OfferType::class, $offer);
 
         $form->handleRequest($request);
@@ -33,7 +35,7 @@ class OfferController extends Controller
 
         if ($form->isSubmitted()) {
             $offer->setDriver($this->getUser());
-
+            $offer->setCar($offer->getCar()->getCarName());         // if it's stupid but it works, it ain't stupid :D
             $em = $this->getDoctrine()->getManager();
             $em->persist($offer);
             $em->flush();
@@ -82,6 +84,7 @@ class OfferController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $offer->setCar($offer->getCar()->getCarName());
             $em = $this->getDoctrine()->getManager();
             $em->persist($offer);
             $em->flush();

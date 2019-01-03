@@ -426,11 +426,12 @@ class User implements UserInterface
     }
 
     /**
-     * @param $car
+     * @param $carName
      */
-    public function setCars($car)
+    public function setCars($carName)
     {
-        $this->cars[] = $car;
+
+        $this->cars[] = $carName;
     }
 
 

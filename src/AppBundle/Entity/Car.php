@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -59,6 +60,25 @@ class Car
      */
     private $owner;
 
+    /**
+     * @var string
+     * @ORM\Column(name="carName", type="string", length=255)
+     */
+    private $carName;
+
+//    /**
+//     * @var ArrayCollection
+//     *
+//     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Offer", inversedBy="id")
+//     * @ORM\Column(type="string")
+//     */
+//    private $trips;
+//
+//
+//    public function __construct()
+//    {
+//        $this->trips = new ArrayCollection();
+//    }
 
     /**
      * Get id
@@ -182,6 +202,39 @@ class Car
     {
         $this->owner = $owner;
     }
+
+    /**
+     * @return string
+     */
+    public function getCarName()
+    {
+        return $this->carName;
+    }
+
+    /**
+     * @param $manufacturer
+     * @param $model
+     */
+    public function setCarName($manufacturer, $model)
+    {
+        $this->carName = "$manufacturer $model";
+    }
+
+//    /**
+//     * @return ArrayCollection
+//     */
+//    public function getTrips()
+//    {
+//        return $this->trips;
+//    }
+//
+//    /**
+//     * @param ArrayCollection $trips
+//     */
+//    public function setTrips($trips)
+//    {
+//        $this->trips[] = $trips;
+//    }
 
 
 

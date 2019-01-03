@@ -3,7 +3,10 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Car;
+use AppBundle\Entity\User;
+use AppBundle\Repository\CarRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -19,7 +22,11 @@ class OfferType extends AbstractType
         $builder
             ->add('start_destination', TextType::class)
             ->add('end_destination', TextType::class)
-            ->add('date', DateType::class)
+            ->add('date', DateType::class, array(
+                'widget' => 'single_text',
+                // adds a class that can be selected in JavaScript
+                'attr' => ['class' => 'js-datepicker']
+            ))
             ->add('hour', TextType::class)
             ->add('price', TextType::class)
             ->add('seats', TextType::class)
@@ -32,7 +39,13 @@ class OfferType extends AbstractType
                     'large' => 'large'
                 )
             ))
-            ->add('car', TextType::class);
+            ->add('car', EntityType::class, array(
+                'class' => Car::class,
+                'query_builder' => function (CarRepository $er) {
+                    return $er->createQueryBuilder('cars')->orderBy('cars.carName', 'ASC');
+                },
+                'choice_label' => 'carName',
+            ));
     }
 
     public function configureOptions(OptionsResolver $resolver)

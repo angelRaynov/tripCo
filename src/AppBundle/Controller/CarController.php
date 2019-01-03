@@ -44,6 +44,7 @@ class CarController extends Controller
             }
             $car->setPicture($fileName);
             $car->setOwner($this->getUser());
+            $car->setCarName($car->getManufacturer(),$car->getModel());
             $em = $this->getDoctrine()->getManager();
             $em->persist($car);
             $em->flush();
